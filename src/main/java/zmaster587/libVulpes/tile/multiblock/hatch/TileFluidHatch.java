@@ -108,18 +108,27 @@ public class TileFluidHatch extends TilePointer implements IFluidHandlerInternal
 	}
 
 	
+
+
 	@Override
-	public FluidStack drain(FluidStack resource, boolean doDrain) {
+	@Nullable
+	public FluidStack drain(@Nullable FluidStack resource, boolean doDrain) {
+		if (resource == null || resource.getFluid() == null || resource.amount <= 0) return null;
 
-		if(resource.isFluidEqual(fluidTank.getFluid())) {
-			FluidStack fluidStack = fluidTank.drain(resource.amount, doDrain);
-			while(useBucket(0, getStackInSlot(0)));
+		if (!resource.isFluidEqual(this.fluidTank.getFluid())) {
+			return null;
+		} else {
+			FluidStack fluidStack = this.fluidTank.drain(resource.amount, doDrain);
 
-			world.notifyNeighborsOfStateChange(pos,this.getBlockType(), true);
+			while (this.useBucket(0, this.getStackInSlot(0))) { }
+
+			if (this.world != null) {
+				this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
+			}
 			return fluidStack;
 		}
-		return null;
 	}
+
 
 	@Override
 	public FluidStack drain(int maxDrain, boolean doDrain) {
