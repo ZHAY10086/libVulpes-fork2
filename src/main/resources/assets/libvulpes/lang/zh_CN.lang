@@ -1,16 +1,17 @@
-itemGroup.multiBlock=多方块机器组件
-item.Linker.name=连接器
+itemGroup.multiBlock=多方块机器部件
+item.Linker.name=链接器
 
-tile.hatch.0.name=输入口
-tile.hatch.1.name=输出口
-tile.hatch.2.name=液体输入口
-tile.hatch.3.name=液体输出口
+tile.hatch.0.name=输入仓
+tile.hatch.1.name=输出仓
+tile.hatch.2.name=流体输入仓
+tile.hatch.3.name=流体输出仓
 
-tile.forgePowerInput.name=能量输入口
-tile.forgePowerOutput.name=能量输出口
-tile.creativePowerBattery.name=创造模式能量输入口
-tile.rfBattery.name=RF能量输入口
-tile.IC2Plug.name=IC2能量输入口
+tile.forgePowerInput.name=能量输入接口
+tile.forgePowerOutput.name=能量输出接口
+tile.creativePowerBattery.name=创造模式能量输入接口
+tile.rfBattery.name=红石通量（RF）输入接口
+tile.IC2Plug.name=IC2接口（EU）
+tile.GTPlug.name=格雷科技接口
 tile.structureMachine.name=机器结构方块
 tile.advStructureMachine.name=高级机器结构方块
 tile.blockGenericMachine.name=机器控制器方块
@@ -19,26 +20,29 @@ tile.coil.copper.name=铜线圈
 tile.coil.tin.name=锡线圈
 tile.coil.steel.name=钢线圈
 tile.coil=线圈
-tile.Copper.name=铜矿
-tile.Tin.name=锡矿
-tile.Rutile.name=金红石矿
+tile.Copper.name=铜矿石
+tile.Tin.name=锡矿石
+tile.Rutile.name=金红石矿石
 tile.Aluminum.name=铝矿石
-tile.coalGenerator.name=煤炭发电机
+tile.coalGenerator.name=燃煤发电机
 tile.motor.name=马达
 tile.advancedMotor.name=高级马达
 tile.enhancedMotor.name=强化马达
 tile.eliteMotor.name=精英马达
 
 item.holoProjector.name=全息投影器
+msg.linker.error.firstMachine=这台机器必须第一个被链接！
+msg.linker.program=坐标已写入链接器
+msg.linker.success=已成功链接
 
-type.gem.name=晶体
+type.gem.name=水晶
 type.dust.name=粉
-type.boule.name=球
+type.boule.name=胚晶
 type.ingot.name=锭
 type.nugget.name=粒
 type.stick.name=棒
 type.plate.name=板
-type.ore.name=矿
+type.ore.name=矿石
 type.block.name=块
 type.coil.name=线圈
 type.fan.name=扇叶
@@ -55,3 +59,9 @@ material.Titanium.name=钛
 material.Rutile.name=金红石
 material.Aluminum.name=铝
 material.Iridium.name=铱
+material.Dilithium.name=双锂
+
+item.battery.0.name=电池
+item.battery.1.name=电池组
+
+machine.tooltip.multiblock=（多方块机器）
