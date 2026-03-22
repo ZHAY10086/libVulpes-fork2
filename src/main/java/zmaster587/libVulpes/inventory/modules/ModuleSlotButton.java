@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -76,7 +77,7 @@ public class ModuleSlotButton extends ModuleButton {
 		GL11.glRotated(45.0F + ((System.currentTimeMillis() % 200000)/50F) * 2, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslatef(-.5f,-255,-.5f);
 		//GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glDepthMask(false);
+		GL11.glDepthMask(true);
 		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 		Block itemBlock = Block.getBlockFromItem(stack.getItem());
 		if(itemBlock != Blocks.AIR) {
@@ -88,6 +89,9 @@ public class ModuleSlotButton extends ModuleButton {
 		}
 		GL11.glPopMatrix();
 
+		GL11.glDepthMask(true);
+		GL11.glEnable(GL11.GL_BLEND);
+		GlStateManager.color(1f, 1f, 1f, 1f);
 	}
 
 }
