@@ -1,0 +1,4 @@
+- 0.5.1
+  - ModuleSlotButton
+    - 3d render of blocks used in Observatory and Rocket, now renders Vanilla Chests and the modded i tested. (alchemical, ironchests)
+    - GLstate leaking in RocketGUI breaking normal render in inventory
