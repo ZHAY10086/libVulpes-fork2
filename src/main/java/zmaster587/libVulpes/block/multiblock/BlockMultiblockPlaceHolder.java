@@ -55,15 +55,36 @@ public class BlockMultiblockPlaceHolder extends BlockContainer {
 	}
 
 	//Make sure to get the block this one is storing rather than the placeholder itself
+	//Yes, really make sure. old code was only 66% sure...
 	@Override
 	@Nonnull
 	public ItemStack getPickBlock(@Nullable IBlockState state, RayTraceResult target,
-			World world, @Nonnull BlockPos pos, EntityPlayer player) {
-		
-		TilePlaceholder tile = (TilePlaceholder)world.getTileEntity(pos);
-		if(tile != null && tile.getReplacedState() != null)
-			return new ItemStack(tile.getReplacedState().getBlock(), 1, tile.getReplacedMeta());
-		else return ItemStack.EMPTY;
+								  World world, @Nonnull BlockPos pos, EntityPlayer player) {
+
+		TileEntity te = world.getTileEntity(pos);
+		if (!(te instanceof TilePlaceholder)) {
+			return ItemStack.EMPTY;
+		}
+
+		TilePlaceholder tile = (TilePlaceholder) te;
+		IBlockState replacedState = tile.getReplacedState();
+
+		if (replacedState == null || replacedState.getBlock() == Blocks.AIR) {
+			return ItemStack.EMPTY;
+		}
+
+		Block replacedBlock = replacedState.getBlock();
+
+		try {
+			ItemStack stack = replacedBlock.getPickBlock(replacedState, target, world, pos, player);
+			if (stack != null && !stack.isEmpty()) {
+				return stack;
+			}
+		} catch (Exception e) {
+			// nah
+		}
+
+		return new ItemStack(replacedBlock, 1, replacedBlock.damageDropped(replacedState));
 	}
 	
 	
