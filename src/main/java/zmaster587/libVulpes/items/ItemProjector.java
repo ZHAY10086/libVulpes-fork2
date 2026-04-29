@@ -3,6 +3,8 @@ package zmaster587.libVulpes.items;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -15,8 +17,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -52,6 +56,11 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 	private static final String IDNAME = "machineId";
 
+	private static final int BUTTON_COLOR_NORMAL = 0xFF22FF22;
+	private static final int BUTTON_COLOR_SELECTED = 0xFFFFFF55;
+	private static final int BUTTON_BG_NORMAL = 0xFFFFFFFF;
+	private static final int BUTTON_BG_SELECTED = 0xFF444444;
+
 	public ItemProjector() {
 		machineList = new ArrayList<>();
 		blockList = new ArrayList<>();
@@ -76,6 +85,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			}
 		}
 
+		String orSeparator = " " + LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.or") + " ";
 		StringBuilder str = new StringBuilder(Item.getItemFromBlock(mainBlock).getItemStackDisplayName(new ItemStack(mainBlock)) + " x1\n");
 
 		for(Entry<Object, Integer> entry : map.entrySet()) {
@@ -88,12 +98,12 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 				String itemStr = Item.getItemFromBlock(meta.getBlock()).getItemStackDisplayName(new ItemStack(meta.getBlock(), 1, meta.getMeta()));
 				if (!itemStr.contains("tile.")) {
 					str.append(itemStr);
-					str.append(" or ");
+					str.append(orSeparator);
 				}
 			}
-			
-			if(str.toString().endsWith(" or ")) {
-				str = new StringBuilder(str.substring(0, str.length() - 4));
+
+			if(str.toString().endsWith(orSeparator)) {
+				str = new StringBuilder(str.substring(0, str.length() - orSeparator.length()));
 			}
 			str.append(" x").append(entry.getValue()).append("\n");
 		}
@@ -303,7 +313,28 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 
 		for(int i = 0; 	i <	machineList.size(); i++) {
 			TileMultiBlock multiblock = machineList.get(i);
-			btns.add(new ModuleButton(60, 4 + i*24, i, LibVulpes.proxy.getLocalizedString(multiblock.getMachineName()), this,  zmaster587.libVulpes.inventory.TextureResources.buttonBuild));
+			String machineName = LibVulpes.proxy.getLocalizedString(multiblock.getMachineName());
+
+			if(player != null && player.world.isRemote) {
+				btns.add(new ModuleSelectableProjectorButton(
+						60,
+						4 + i*24,
+						i,
+						machineName,
+						this,
+						zmaster587.libVulpes.inventory.TextureResources.buttonBuild
+				));
+			}
+			else {
+				btns.add(new ModuleButton(
+						60,
+						4 + i*24,
+						i,
+						machineName,
+						this,
+						zmaster587.libVulpes.inventory.TextureResources.buttonBuild
+				));
+			}
 		}
 
 		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
@@ -324,11 +355,54 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onInventoryButtonPressed(int buttonId) {
-		//PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().thePlayer, (byte)buttonId));
 		ItemStack stack = Minecraft.getMinecraft().player.getHeldItem(EnumHand.MAIN_HAND);
-		if(!stack.isEmpty() && stack.getItem() == this) {
+
+		if(!stack.isEmpty() && stack.getItem() == this && buttonId >= 0 && buttonId < machineList.size()) {
+			int oldId = getMachineId(stack);
+
 			setMachineId(stack, buttonId);
+
+			String machineName = LibVulpes.proxy.getLocalizedString(machineList.get(buttonId).getMachineName());
+
+			if(oldId == buttonId) {
+				Minecraft.getMinecraft().player.sendStatusMessage(
+						new TextComponentTranslation("msg.libvulpes.holoProjector.alreadySelected", machineName),
+						true
+				);
+			}
+			else {
+				Minecraft.getMinecraft().player.sendStatusMessage(
+						new TextComponentTranslation("msg.libvulpes.holoProjector.selected", machineName),
+						true
+				);
+			}
+
 			PacketHandler.sendToServer(new PacketItemModifcation(this, Minecraft.getMinecraft().player, (byte)0));
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private class ModuleSelectableProjectorButton extends ModuleButton {
+
+		public ModuleSelectableProjectorButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation[] buttonImages) {
+			super(offsetX, offsetY, buttonId, text, tile, buttonImages);
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+			EntityPlayer player = Minecraft.getMinecraft().player;
+			boolean selected = false;
+
+			if(player != null) {
+				ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+				selected = !stack.isEmpty() && stack.getItem() == ItemProjector.this && getMachineId(stack) == buttonId;
+			}
+
+			setColor(selected ? BUTTON_COLOR_SELECTED : BUTTON_COLOR_NORMAL);
+			setBGColor(selected ? BUTTON_BG_SELECTED : BUTTON_BG_NORMAL);
+
+			super.renderForeground(guiOffsetX, guiOffsetY, mouseX, mouseY, zLevel, gui, font);
 		}
 	}
 
@@ -345,7 +419,7 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	}
 
 	private int getMachineId(@Nonnull ItemStack stack) {
-		if(stack.hasTagCompound()) {
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(IDNAME)) {
 			return stack.getTagCompound().getInteger(IDNAME);
 		}
 		else
@@ -449,8 +523,8 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			List<String> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
-		list.add("Shift right-click: opens machine selection interface");
-		list.add("Shift-scroll: moves cross-section");
+		list.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.openGui"));
+		list.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.crossSection"));
 
 		int id = getMachineId(stack);
 		if(id != -1) {
