@@ -8,12 +8,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import zmaster587.libVulpes.gui.CommonResources;
 import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+@MouseTweaksDisableWheelTweak
 public class GuiModular extends GuiContainer {
 
     List<ModuleBase> modules;
