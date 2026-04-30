@@ -369,8 +369,8 @@ public class TileMultiPowerConsumer extends TileMultiBlock implements INetworkMa
 		LinkedList<ModuleBase> modules = new LinkedList<>();
 		modules.add(new ModulePower(18, 20, getBatteries()));
 		modules.add(toggleSwitch = new ModuleToggleSwitch(160, 5, 0, "", this,  zmaster587.libVulpes.inventory.TextureResources.buttonToggleImage, 11, 26, getMachineEnabled()));
-		modules.add(new ModuleText(140, 40, String.format("Speed:\n%.2fx", 1/getTimeMultiplier()), 0x2d2d2d));
-		modules.add(new ModuleText(140, 60, String.format("Power:\n%.2fx", 1f), 0x2d2d2d));
+		modules.add(new ModuleText(140,40,LibVulpes.proxy.getLocalizedString("msg.libvulpes.machine.speed") + "\n" + String.format("%.2fx", 1/getTimeMultiplier()), 0x2d2d2d));
+		modules.add(new ModuleText(140,60,LibVulpes.proxy.getLocalizedString("msg.libvulpes.machine.power") + "\n" + String.format("%.2fx", 1f), 0x2d2d2d));
 		
 		return modules;
 	}

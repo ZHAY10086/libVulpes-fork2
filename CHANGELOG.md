@@ -3,6 +3,8 @@
   - Holo-Projector:
     - Show and tell the player's selection
     - Searchbar
+  - Cleaned up hardcoded english to langfile entries
+    - updated Chinese langfile
 
 - 0.5.1
   - 3D render of blocks Observatory and Rocket, now renders Vanilla Chests and more correctly

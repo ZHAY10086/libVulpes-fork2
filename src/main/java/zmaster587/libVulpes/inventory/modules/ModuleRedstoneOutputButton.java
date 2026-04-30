@@ -1,5 +1,6 @@
 package zmaster587.libVulpes.inventory.modules;
 
+import zmaster587.libVulpes.LibVulpes;
 import zmaster587.libVulpes.inventory.TextureResources;
 import zmaster587.libVulpes.util.ZUtils.RedstoneState;
 import net.minecraft.client.gui.FontRenderer;
@@ -49,17 +50,17 @@ public class ModuleRedstoneOutputButton extends ModuleButton {
 		if(state != null)
 
 			switch(state) {
-			case ON:
-				button.setButtonTexture(TextureResources.buttonRedstoneActive);
-				tooltipText = suppText + "Redstone control normal";
-				break;
-			case OFF:
-				button.setButtonTexture(TextureResources.buttonRedstoneDisabled);
-				tooltipText = suppText + "Redstone control disabled";
-				break;
-			case INVERTED:
-				button.setButtonTexture(TextureResources.buttonRedstoneInverted);
-				tooltipText = suppText + "Redstone control inverted";
+				case ON:
+					button.setButtonTexture(TextureResources.buttonRedstoneActive);
+					tooltipText = suppText + LibVulpes.proxy.getLocalizedString("msg.libvulpes.redstoneControl.normal");
+					break;
+				case OFF:
+					button.setButtonTexture(TextureResources.buttonRedstoneDisabled);
+					tooltipText = suppText + LibVulpes.proxy.getLocalizedString("msg.libvulpes.redstoneControl.disabled");
+					break;
+				case INVERTED:
+					button.setButtonTexture(TextureResources.buttonRedstoneInverted);
+					tooltipText = suppText + LibVulpes.proxy.getLocalizedString("msg.libvulpes.redstoneControl.inverted");
 			}
 
 		super.renderBackground(gui, x, y, mouseX, mouseY, font);

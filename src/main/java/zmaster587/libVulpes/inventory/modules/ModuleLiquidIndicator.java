@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.util.ResourceLocation;
@@ -15,11 +16,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import zmaster587.libVulpes.util.IFluidHandlerInternal;
 
-import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -179,7 +178,7 @@ public class ModuleLiquidIndicator extends ModuleBase {
             if (fluidStack != null) {
                 list.add(fluidStack.getLocalizedName() + ": " + fluidStack.amount + " / " + tile.getTankProperties()[0].getCapacity() + " mB");
             } else {
-                list.add("Empty");
+                list.add(I18n.format("msg.libvulpes.liquid.empty"));
             }
 
             this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
@@ -210,7 +209,6 @@ public class ModuleLiquidIndicator extends ModuleBase {
             int color = info.getContents().getFluid().getColor(info.getContents());
 
             GL11.glColor3b((byte) ((color >>> 16) & 127), (byte) ((color >>> 8) & 127), (byte) (color & 127));
-            //GL11.glColor3b((byte)127, (byte)127, (byte)127);
 
             float percent = getProgress();
             int ySize = 52;
@@ -222,10 +220,6 @@ public class ModuleLiquidIndicator extends ModuleBase {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 gui.drawTexturedModalRect(offsetX + x + 1, offsetY + y + 1 + (ySize - (int) (percent * ySize)), sprite, xSize, (int) (percent * ySize));
             }
-            //gui.drawTexturedModelRectFrom(offsetX + x + 1, offsetY + y + 1 + (ySize-(int)(percent*ySize)), fluidIcon, xSize, (int)(percent*ySize));
-
-            //this.drawProgressBarIconVertical(x + 27, y + 18,, 12, 52, getProgress());
         }
     }
-
 }
