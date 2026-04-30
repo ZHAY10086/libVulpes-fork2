@@ -1,6 +1,8 @@
 - 0.5.2
   - disable MouseTweaksWheelTweak globally to repair normal scrolling
-  - Holo-Projector now show and tells player selection
+  - Holo-Projector:
+    - Show and tell the player's selection
+    - Searchbar
 
 - 0.5.1
   - 3D render of blocks Observatory and Rocket, now renders Vanilla Chests and more correctly

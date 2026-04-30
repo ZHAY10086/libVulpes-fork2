@@ -71,3 +71,4 @@ msg.libvulpes.holoProjector.alreadySelected=Already selected: %s
 msg.libvulpes.holoProjector.tooltip.openGui=Sneak right-click: opens machine selection interface
 msg.libvulpes.holoProjector.tooltip.crossSection=Sneak-scroll: moves cross-section
 msg.libvulpes.holoProjector.or=or
+msg.libvulpes.holoProjector.search=Search:
