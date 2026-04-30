@@ -77,7 +77,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-@Mod(modid="libvulpes", name="Vulpes library", version="0.5.0", useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core;after:immersiveengineering")
+@Mod(modid="libvulpes", name="Vulpes library", version="0.5.2", useMetadata=true, dependencies="after:ic2;after:cofhcore;after:buildcraft|core;after:immersiveengineering")
 
 public class LibVulpes {
 	public static org.apache.logging.log4j.Logger logger = LogManager.getLogger("libVulpes");

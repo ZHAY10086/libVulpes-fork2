@@ -65,9 +65,13 @@ public class ItemOreProduct extends Item {
 			if(I18n.canTranslate(translate))
 				return I18n.translateToLocal(translate);
 			else
-				return I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name") + " " + I18n.translateToLocal("type." + outputType + ".name");
+				return I18n.translateToLocalFormatted(
+						"item.libvulpes.materialType.name",
+						I18n.translateToLocal("material." + properties.get(itemstack.getItemDamage()).getUnlocalizedName() + ".name"),
+						I18n.translateToLocal("type." + outputType + ".name")
+				);
 			} catch (NullPointerException e2) {
-				return "No name!!!";
+			return I18n.translateToLocal("item.libvulpes.noName.name");
 			}
 	}
 }

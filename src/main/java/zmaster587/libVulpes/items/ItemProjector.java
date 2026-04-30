@@ -48,11 +48,16 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ItemProjector extends Item implements IModularInventory, IButtonInventory, INetworkItem {
+public class ItemProjector extends Item implements IModularInventory, IButtonInventory, IGuiCallback, INetworkItem {
 
 	private ArrayList<TileMultiBlock> machineList;
 	private ArrayList<BlockTile> blockList;
 	private ArrayList<String> descriptionList;
+
+	private ModuleTextBox projectorSearchBox;
+	private ModuleContainerPan projectorMachinePan;
+	private final List<ModuleSelectableProjectorButton> projectorSearchButtons = new LinkedList<>();
+	private String projectorSearchText = "";
 
 	private static final String IDNAME = "machineId";
 
@@ -60,6 +65,15 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 	private static final int BUTTON_COLOR_SELECTED = 0xFFFFFF55;
 	private static final int BUTTON_BG_NORMAL = 0xFFFFFFFF;
 	private static final int BUTTON_BG_SELECTED = 0xFF444444;
+
+	private static final int PROJECTOR_BUTTON_X = 60;
+	private static final int PROJECTOR_BUTTON_START_Y = 4;
+	private static final int PROJECTOR_BUTTON_SPACING_Y = 24;
+
+	private static final int PROJECTOR_PAN_X = 5;
+	private static final int PROJECTOR_PAN_Y = 38;
+	private static final int PROJECTOR_PAN_WIDTH = 160;
+	private static final int PROJECTOR_PAN_HEIGHT = 64;
 
 	public ItemProjector() {
 		machineList = new ArrayList<>();
@@ -311,33 +325,88 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		List<ModuleBase> modules = new LinkedList<>();
 		List<ModuleBase> btns = new LinkedList<>();
 
-		for(int i = 0; 	i <	machineList.size(); i++) {
-			TileMultiBlock multiblock = machineList.get(i);
+		projectorSearchButtons.clear();
+		projectorMachinePan = null;
+		projectorSearchBox = null;
+
+		boolean isClient = player != null && player.world.isRemote;
+
+		if(isClient) {
+			modules.add(new ModuleText(
+					8,
+					23,
+					LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.search"),
+					0x404040
+			));
+
+			projectorSearchBox = new ModuleTextBox(this, 55, 18, 110, 14, 64);
+			projectorSearchBox.setText(projectorSearchText);
+			modules.add(projectorSearchBox);
+		}
+
+		List<Integer> sortedMachineIds = new ArrayList<>();
+		for(int i = 0; i < machineList.size(); i++) {
+			sortedMachineIds.add(i);
+		}
+
+		Collections.sort(sortedMachineIds, new Comparator<Integer>() {
+			@Override
+			public int compare(Integer first, Integer second) {
+				String firstName = LibVulpes.proxy.getLocalizedString(machineList.get(first).getMachineName());
+				String secondName = LibVulpes.proxy.getLocalizedString(machineList.get(second).getMachineName());
+				return firstName.compareToIgnoreCase(secondName);
+			}
+		});
+
+		int row = 0;
+		for(Integer machineId : sortedMachineIds) {
+			TileMultiBlock multiblock = machineList.get(machineId);
 			String machineName = LibVulpes.proxy.getLocalizedString(multiblock.getMachineName());
 
-			if(player != null && player.world.isRemote) {
-				btns.add(new ModuleSelectableProjectorButton(
-						60,
-						4 + i*24,
-						i,
+			if(isClient) {
+				ModuleSelectableProjectorButton button = new ModuleSelectableProjectorButton(
+						PROJECTOR_BUTTON_X,
+						PROJECTOR_BUTTON_START_Y + row * PROJECTOR_BUTTON_SPACING_Y,
+						machineId,
 						machineName,
 						this,
 						zmaster587.libVulpes.inventory.TextureResources.buttonBuild
-				));
+				);
+
+				projectorSearchButtons.add(button);
+				btns.add(button);
 			}
 			else {
 				btns.add(new ModuleButton(
-						60,
-						4 + i*24,
-						i,
+						PROJECTOR_BUTTON_X,
+						PROJECTOR_BUTTON_START_Y + row * PROJECTOR_BUTTON_SPACING_Y,
+						machineId,
 						machineName,
 						this,
 						zmaster587.libVulpes.inventory.TextureResources.buttonBuild
 				));
 			}
+
+			row++;
 		}
 
-		ModuleContainerPan panningContainer = new ModuleContainerPan(5, 20, btns, new LinkedList<>(), TextureResources.starryBG, 160, 100, 0, 500);
+		ModuleContainerPan panningContainer = new ModuleContainerPan(
+				PROJECTOR_PAN_X,
+				PROJECTOR_PAN_Y,
+				btns,
+				new LinkedList<>(),
+				TextureResources.starryBG,
+				PROJECTOR_PAN_WIDTH,
+				PROJECTOR_PAN_HEIGHT,
+				0,
+				500
+		);
+
+		if(isClient) {
+			projectorMachinePan = panningContainer;
+			updateProjectorSearchFilter();
+		}
+
 		modules.add(panningContainer);
 		return modules;
 	}
@@ -381,16 +450,83 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 	}
 
+	@Override
+	public void onModuleUpdated(ModuleBase module) {
+		if(module == projectorSearchBox && projectorSearchBox != null) {
+			projectorSearchText = normalizeProjectorSearch(projectorSearchBox.getText());
+
+			if(projectorMachinePan != null) {
+				projectorMachinePan.setOffset2(0, 0);
+			}
+
+			updateProjectorSearchFilter();
+		}
+	}
+
+	private String normalizeProjectorSearch(String text) {
+		if(text == null) {
+			return "";
+		}
+
+		return text.trim().toLowerCase(Locale.ROOT);
+	}
+
+	private void updateProjectorSearchFilter() {
+		String search = normalizeProjectorSearch(projectorSearchText);
+		int visibleIndex = 0;
+
+		for(ModuleSelectableProjectorButton button : projectorSearchButtons) {
+			boolean matches = search.isEmpty() || normalizeProjectorSearch(button.getSearchText()).contains(search);
+
+			button.setVisible(matches);
+			button.setEnabled(matches);
+
+			if(matches) {
+				setProjectorButtonPosition(
+						button,
+						PROJECTOR_PAN_X + PROJECTOR_BUTTON_X,
+						PROJECTOR_PAN_Y + PROJECTOR_BUTTON_START_Y + visibleIndex * PROJECTOR_BUTTON_SPACING_Y
+				);
+
+				visibleIndex++;
+			}
+		}
+	}
+
+	private void setProjectorButtonPosition(ModuleSelectableProjectorButton button, int x, int y) {
+		int deltaX = x - button.offsetX;
+		int deltaY = y - button.offsetY;
+
+		button.offsetX = x;
+		button.offsetY = y;
+
+		if(button.button != null) {
+			button.button.x += deltaX;
+			button.button.y += deltaY;
+		}
+	}
+
 	@SideOnly(Side.CLIENT)
 	private class ModuleSelectableProjectorButton extends ModuleButton {
 
+		private final String searchText;
+
 		public ModuleSelectableProjectorButton(int offsetX, int offsetY, int buttonId, String text, IButtonInventory tile, ResourceLocation[] buttonImages) {
 			super(offsetX, offsetY, buttonId, text, tile, buttonImages);
+			this.searchText = text;
+		}
+
+		public String getSearchText() {
+			return searchText;
 		}
 
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void renderForeground(int guiOffsetX, int guiOffsetY, int mouseX, int mouseY, float zLevel, GuiContainer gui, FontRenderer font) {
+			if(button != null && !button.visible) {
+				return;
+			}
+
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			boolean selected = false;
 

@@ -29,11 +29,30 @@ tile.motor.name=Motor
 tile.advancedMotor.name=Advanced Motor
 tile.enhancedMotor.name=Enhanced Motor
 tile.eliteMotor.name=Elite Motor
-
 item.holoProjector.name=Holo-Projector
+
 msg.linker.error.firstMachine=This must be the first machine to link!
 msg.linker.program=Coordinates programmed into Linker
 msg.linker.success=Linked Sucessfully
+msg.libvulpes.linker.tooltip.coordsUnset=Coords unset!
+msg.libvulpes.linker.tooltip.x=X:
+msg.libvulpes.linker.tooltip.y=Y:
+msg.libvulpes.linker.tooltip.z=Z:
+msg.libvulpes.linker.tooltip.dim=Dim:
+msg.libvulpes.redstoneControl.normal=Normal
+msg.libvulpes.redstoneControl.disabled=Disabled
+msg.libvulpes.redstoneControl.inverted=Inverted
+msg.libvulpes.power.tooltip=%d / %d Power
+msg.libvulpes.liquid.empty=Empty
+msg.libvulpes.machine.speed=Speed:
+msg.libvulpes.machine.power=Power:
+
+msg.libvulpes.holoProjector.selected=Selected: %s
+msg.libvulpes.holoProjector.alreadySelected=Already selected: %s
+msg.libvulpes.holoProjector.tooltip.openGui=Sneak right-click: opens machine selection interface
+msg.libvulpes.holoProjector.tooltip.crossSection=Sneak-scroll: moves cross-section
+msg.libvulpes.holoProjector.or=or
+msg.libvulpes.holoProjector.search=Search:
 
 type.gem.name=Crystal
 type.dust.name=Dust
@@ -61,13 +80,11 @@ material.Aluminum.name=Aluminum
 material.Iridium.name=Iridium
 material.Dilithium.name=Dilithium
 
+item.libvulpes.materialType.name=%s %s
+item.libvulpes.noName.name=No name!!!
+
 item.battery.0.name=Battery
 item.battery.1.name=Battery Pack
 
 machine.tooltip.multiblock=(Multiblock Machine)
-
-msg.libvulpes.holoProjector.selected=Selected: %s
-msg.libvulpes.holoProjector.alreadySelected=Already selected: %s
-msg.libvulpes.holoProjector.tooltip.openGui=Sneak right-click: opens machine selection interface
-msg.libvulpes.holoProjector.tooltip.crossSection=Sneak-scroll: moves cross-section
-msg.libvulpes.holoProjector.or=or
+msg.libvulpes.motor.tooltip.machineSpeed=Machine Speed:

@@ -7,6 +7,7 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zmaster587.libVulpes.api.IUniversalEnergy;
+import net.minecraft.client.resources.I18n;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +51,11 @@ public class ModulePower extends ModuleBase {
 
 		if( relativeX > 0 && relativeX < barXSize && relativeY > 0 && relativeY < barYSize) {
 			List<String> list = new LinkedList<>();
-			list.add(tile.getUniversalEnergyStored() + " / " + tile.getMaxEnergyStored() + " Power");
+			list.add(I18n.format(
+					"msg.libvulpes.power.tooltip",
+					tile.getUniversalEnergyStored(),
+					tile.getMaxEnergyStored()
+			));
 
 			this.drawTooltip(gui, list, mouseX, mouseY, zLevel, font);
 		}

@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.api.ITimeModifier;
+import zmaster587.libVulpes.LibVulpes;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -37,8 +38,8 @@ public class BlockMotor extends RotatableBlock implements ITimeModifier {
 	public void addInformation(@Nonnull ItemStack stack, World player,
 							   List<String> tooltip, ITooltipFlag advanced) {
 		super.addInformation(stack, player, tooltip, advanced);
-		
-		tooltip.add(String.format(ChatFormatting.GRAY + "Machine Speed: %.2f", 1/getTimeMult()));
+
+		 tooltip.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.libvulpes.motor.tooltip.machineSpeed") + " " + String.format("%.2f", 1/getTimeMult()));
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zmaster587.libVulpes.interfaces.ILinkableTile;
+import zmaster587.libVulpes.LibVulpes;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -37,15 +38,15 @@ public class ItemLinker extends Item {
 		int y = getMasterY(par1ItemStack);
 
 		if(y == 0){
-			par3List.add("Coords unset!");
+			par3List.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.linker.tooltip.coordsUnset"));
 		}
 		else {
-			par3List.add("X: " + getMasterX(par1ItemStack));
-			par3List.add("Y: " + getMasterY(par1ItemStack));
-			par3List.add("Z: " + getMasterZ(par1ItemStack));
+			par3List.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.linker.tooltip.x") + " " + getMasterX(par1ItemStack));
+			par3List.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.linker.tooltip.y") + " " + getMasterY(par1ItemStack));
+			par3List.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.linker.tooltip.z") + " " + getMasterZ(par1ItemStack));
 			int dimId = getDimId(par1ItemStack);
 			if(dimId != -1)
-				par3List.add("Dim: " + dimId);
+				par3List.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.linker.tooltip.dim") + " " + dimId);
 		}
 	}
 
