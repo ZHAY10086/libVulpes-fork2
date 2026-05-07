@@ -1,3 +1,6 @@
+- 0.5.3
+  - disable MouseTweaksWheelTweak for planetselector fullscreen to repair zoom-in / zoom-out
+
 - 0.5.2
   - disable MouseTweaksWheelTweak globally to repair normal scrolling
   - Holo-Projector:

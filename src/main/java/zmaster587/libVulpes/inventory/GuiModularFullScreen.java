@@ -6,7 +6,9 @@ import zmaster587.libVulpes.inventory.modules.IModularInventory;
 import zmaster587.libVulpes.inventory.modules.ModuleBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
+@MouseTweaksDisableWheelTweak
 public class GuiModularFullScreen extends GuiModular {
 
 	public GuiModularFullScreen(EntityPlayer playerInv,
