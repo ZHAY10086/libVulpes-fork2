@@ -113,7 +113,7 @@ public class ModuleSlotButton extends ModuleButton {
 	private void renderSpinningBlock(int drawX, int drawY) {
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
-		int zLevel = 500;
+		int zLevel = 100;
 
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
@@ -151,7 +151,7 @@ public class ModuleSlotButton extends ModuleButton {
 		Minecraft mc = Minecraft.getMinecraft();
 		RenderItem renderItem = mc.getRenderItem();
 		TextureManager textureManager = mc.getTextureManager();
-		int zLevel = 500;
+		int zLevel = 100;
 
 		IBakedModel model = renderItem.getItemModelWithOverrides(stack, worldObj, null);
 		if (model == null) {
