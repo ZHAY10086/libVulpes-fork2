@@ -1,5 +1,6 @@
 0.5.4
   - 3D spinning render in rocket/observatory GUI, now renders behind held item
+  - Corrected limited slots for Satellite Builder
 
 0.5.3
   - disable MouseTweaksWheelTweak for planetselector fullscreen to repair zoom-in / zoom-out
