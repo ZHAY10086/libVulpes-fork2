@@ -16,8 +16,7 @@ public class SlotLimitedItem extends Slot {
 	}
 	
 	@Override
-	public boolean isItemValid(@Nonnull ItemStack stack)
-	{
-		return tile.isItemValidForSlot(this.slotNumber, stack);
+	public boolean isItemValid(@Nonnull ItemStack stack) {
+		return tile.isItemValidForSlot(getSlotIndex(), stack);
 	}
 }
