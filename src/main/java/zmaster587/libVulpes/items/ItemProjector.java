@@ -659,12 +659,14 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 			List<String> list, ITooltipFlag bool) {
 		super.addInformation(stack, player, list, bool);
 
-		list.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.openGui"));
-		list.add(LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.crossSection"));
+		list.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.description"));
+		list.add(ChatFormatting.YELLOW + LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.openGui"));
+		list.add(ChatFormatting.GOLD + LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.crossSection"));
 
 		int id = getMachineId(stack);
 		if(id != -1) {
 			list.add("");
+			list.add(ChatFormatting.GRAY + LibVulpes.proxy.getLocalizedString("msg.libvulpes.holoProjector.tooltip.selected"));
 			list.add(ChatFormatting.GREEN + LibVulpes.proxy.getLocalizedString(machineList.get(id).getMachineName()));
 			String str = descriptionList.get(id);
 

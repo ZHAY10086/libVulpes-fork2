@@ -49,8 +49,10 @@ msg.libvulpes.machine.power=Power:
 
 msg.libvulpes.holoProjector.selected=Selected: %s
 msg.libvulpes.holoProjector.alreadySelected=Already selected: %s
-msg.libvulpes.holoProjector.tooltip.openGui=Sneak right-click: opens machine selection interface
-msg.libvulpes.holoProjector.tooltip.crossSection=Sneak-scroll: moves cross-section
+msg.libvulpes.holoProjector.tooltip.description=Projects hologram preview of multiblocks.
+msg.libvulpes.holoProjector.tooltip.openGui=Sneak-right-click to open menu.
+msg.libvulpes.holoProjector.tooltip.crossSection=Sneak-scroll to change cross-section.
+msg.libvulpes.holoProjector.tooltip.selected=Selected:
 msg.libvulpes.holoProjector.or=or
 msg.libvulpes.holoProjector.search=Search:
 
