@@ -1,3 +1,6 @@
+0.5.5
+  - ho
+
 0.5.4
   - 3D spinning render in rocket/observatory GUI, now renders behind held item
   - Corrected limited slots for Satellite Builder
