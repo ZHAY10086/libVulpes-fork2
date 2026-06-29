@@ -1,5 +1,7 @@
 0.5.5
-  - ho
+  - Holo-Projector: 
+    - Clear ghostblocks when opening GUI
+    - Tooltip overhaul
 
 0.5.4
   - 3D spinning render in rocket/observatory GUI, now renders behind held item

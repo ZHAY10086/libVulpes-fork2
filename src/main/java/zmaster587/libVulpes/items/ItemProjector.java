@@ -144,34 +144,35 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		}
 	}
 
-	private void clearStructure(World world, TileMultiBlock tile, @Nonnull ItemStack stack) {
+    private void clearStructure(World world, TileMultiBlock tile, @Nonnull ItemStack stack) {
+        if(world == null || world.isRemote) {return;}
+        int prevMachineId = getPrevMachineId(stack);
+        if(prevMachineId < 0 || prevMachineId >= machineList.size()) {
+            return;
+        }
+        Vector3F<Integer> basepos = getBasePosition(stack);
+        if(basepos == null) {return;}
+        int directionId = getDirection(stack);
+        if(directionId < 0 || directionId > 5) {return;}
+        EnumFacing direction = EnumFacing.getFront(directionId);
+        Object[][][] structure = machineList.get(prevMachineId).getStructure();
 
-		int id = getMachineId(stack);
-		EnumFacing direction = EnumFacing.getFront(getDirection(stack));
-
-		TileMultiBlock multiblock = machineList.get(id);
-
-		int prevMachineId = getPrevMachineId(stack);
-		Object[][][] structure;
-		if(prevMachineId >= 0 && prevMachineId < machineList.size()) {
-			structure = machineList.get(prevMachineId).getStructure();
-
-			Vector3F<Integer> basepos = getBasePosition(stack);
-
-			for(int y = 0; y < structure.length; y++) {
-				for(int z=0 ; z < structure[0].length; z++) {
-					for(int x=0; x < structure[0][0].length; x++) {
-
-						int globalX = basepos.x - x*direction.getFrontOffsetZ() + z*direction.getFrontOffsetX();
-						int globalZ = basepos.z + (x* direction.getFrontOffsetX()) + (z*direction.getFrontOffsetZ());
-						BlockPos pos = new BlockPos(globalX, basepos.y + y, globalZ);
-						if(world.getBlockState(pos).getBlock() == LibVulpesBlocks.blockPhantom) 
-							world.setBlockToAir(pos);
-					}
-				}
-			}
-		}
-	}
+        if(structure == null || structure.length == 0 || structure[0].length == 0 || structure[0][0].length == 0) {
+            return;
+        }
+        for(int y = 0; y < structure.length; y++) {
+            for(int z = 0; z < structure[0].length; z++) {
+                for(int x = 0; x < structure[0][0].length; x++) {
+                    int globalX = basepos.x - x * direction.getFrontOffsetZ() + z * direction.getFrontOffsetX();
+                    int globalZ = basepos.z + x * direction.getFrontOffsetX() + z * direction.getFrontOffsetZ();
+                    BlockPos pos = new BlockPos(globalX, basepos.y + y, globalZ);
+                    if(world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() == LibVulpesBlocks.blockPhantom) {
+                        world.setBlockToAir(pos);
+                    }
+                }
+            }
+        }
+    }
 
 	private void RebuildStructure(World world, TileMultiBlock tile, @Nonnull ItemStack stack, int posX, int posY, int posZ, EnumFacing orientation) {
 
@@ -234,18 +235,22 @@ public class ItemProjector extends Item implements IModularInventory, IButtonInv
 		this.setBasePosition(stack, posX, posY, posZ);
 		this.setDirection(stack, orientation.ordinal());
 	}
-	
-	@Override
-	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		
-		if( player.isSneaking()) {
-			if(!world.isRemote)
-				player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world, -1, -1, 0);
-			return super.onItemRightClick(world, player, hand);
-		}
-		return super.onItemRightClick(world, player, hand);
-	}
+
+    @Override
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if(player.isSneaking()) {
+            if(!world.isRemote) {
+                clearStructure(world, null, stack);
+                player.openGui(LibVulpes.instance, GuiHandler.guiId.MODULARNOINV.ordinal(), world,
+                        -1, -1, 0
+                );
+            }
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+        }
+        return super.onItemRightClick(world, player, hand);
+    }
 
 	@Override
 	@Nonnull
